@@ -4,6 +4,7 @@ import DeviceCard from './components/DeviceCard';
 import EnvironmentPanel from './components/EnvironmentPanel';
 import EnergyPanel from './components/EnergyPanel';
 import FeedbackToast from './components/FeedbackToast';
+import TimerPanel from './components/TimerPanel';
 
 function App() {
   const {
@@ -18,7 +19,19 @@ function App() {
     setTemperature,
     setACMode,
     feedback,
+    devices,
+    timers,
+    deviceTimers,
+    selectedTimerDevice,
+    setSelectedTimerDevice,
+    addTimer,
+    toggleTimer,
+    deleteTimer,
   } = useSmartHome(5000);
+
+  const selectedDevice = selectedTimerDevice
+    ? devices.find((d) => d.id === selectedTimerDevice)
+    : undefined;
 
   return (
     <div className="min-h-screen bg-slate-900">
@@ -34,6 +47,8 @@ function App() {
               onBrightness={setBrightness}
               onTemperature={setTemperature}
               onACMode={setACMode}
+              onOpenTimer={setSelectedTimerDevice}
+              timerCount={timers.filter((t) => t.deviceId === device.id).length}
             />
           ))}
         </div>
@@ -43,6 +58,17 @@ function App() {
       </div>
 
       <FeedbackToast message={feedback?.msg || null} />
+
+      {selectedTimerDevice && (
+        <TimerPanel
+          device={selectedDevice}
+          timers={deviceTimers}
+          onClose={() => setSelectedTimerDevice(null)}
+          onAddTimer={addTimer}
+          onToggleTimer={toggleTimer}
+          onDeleteTimer={deleteTimer}
+        />
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Device } from '../types';
-import { Lightbulb, Thermometer, Video, Blinds, Wind, Speaker, Power, WifiOff } from 'lucide-react';
+import { Lightbulb, Thermometer, Video, Blinds, Wind, Speaker, Power, WifiOff, Clock } from 'lucide-react';
 
 interface Props {
   device: Device;
@@ -8,6 +8,8 @@ interface Props {
   onBrightness?: (id: string, val: number) => void;
   onTemperature?: (id: string, val: number) => void;
   onACMode?: (id: string, mode: Device['acMode']) => void;
+  onOpenTimer?: (id: string) => void;
+  timerCount?: number;
 }
 
 const typeIcon: Record<Device['type'], React.ElementType> = {
@@ -26,7 +28,7 @@ const modeLabel: Record<string, string> = {
   fan: '送风',
 };
 
-export default function DeviceCard({ device, onToggle, onBrightness, onTemperature, onACMode }: Props) {
+export default function DeviceCard({ device, onToggle, onBrightness, onTemperature, onACMode, onOpenTimer, timerCount }: Props) {
   const [pulse, setPulse] = useState(false);
   const Icon = typeIcon[device.type];
   const isOffline = !device.online;
@@ -156,6 +158,21 @@ export default function DeviceCard({ device, onToggle, onBrightness, onTemperatu
             </>
           )}
         </div>
+      )}
+
+      {!isOffline && onOpenTimer && (
+        <button
+          onClick={() => onOpenTimer(device.id)}
+          className="mt-3 w-full py-2 flex items-center justify-center gap-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition-colors text-slate-400 hover:text-slate-300"
+        >
+          <Clock className="w-3.5 h-3.5" />
+          <span className="text-xs">定时</span>
+          {timerCount !== undefined && timerCount > 0 && (
+            <span className="px-1.5 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-[10px]">
+              {timerCount}
+            </span>
+          )}
+        </button>
       )}
     </div>
   );

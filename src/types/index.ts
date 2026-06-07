@@ -25,3 +25,15 @@ export interface HourlyEnergy {
   hour: string;
   kwh: number;
 }
+
+export type TimerAction = 'on' | 'off';
+
+export interface Timer {
+  id: string;
+  deviceId: string;
+  deviceName: string;
+  time: string;
+  action: TimerAction;
+  enabled: boolean;
+  days: number[];
+}
